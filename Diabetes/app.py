@@ -10,7 +10,11 @@ from PIL import Image
 st.set_option('deprecation.showfileUploaderEncoding', False)
 model = pickle.load(open('model.pkl', 'rb'))
 
-
+def main():
+    st.sidebar.header("Diabetes Risk Prediction for Females.")
+    st.sidebar.text("This a Web app that tells you Wheather you have Diabetes or not.")
+    st.sidebar.header("Just fill in the information below")
+    st.sidebar.text("The RandomForestClassifier was used.")
 st.title("Diabetes Predictor")
 
 
@@ -69,3 +73,6 @@ grid_response = AgGrid(
 data = grid_response['data']
 selected = grid_response['selected_rows']
 df = pd.DataFrame(selected)  # Pass the selected rows to a new dataframe df
+
+if __name__ =='__main__':
+    main()
