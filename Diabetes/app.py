@@ -1,78 +1,35 @@
-from st_aggrid import GridOptionsBuilder, AgGrid, GridUpdateMode, DataReturnMode
-from email.mime import image
-from operator import index
-import streamlit as st
-import pandas as pd
-import numpy as np
-import string
+from crypt import methods
+from curses import meta
+from flask import Flask, render_template, request
 import pickle
-from PIL import Image
-st.set_option('deprecation.showfileUploaderEncoding', False)
-model = pickle.load(open('model.pkl', 'rb'))
+import numpy as np
+import pandas as pd
+classifer= pickle.load(open('model.pkl','rb'))
 
-def main():
-    st.sidebar.header("Diabetes Risk Prediction for Females.")
-    st.sidebar.text("This a Web app that tells you Wheather you have Diabetes or not.")
-    st.sidebar.header("Just fill in the information below")
-    st.sidebar.text("The RandomForestClassifier was used.")
-st.title("Diabetes Predictor")
+app=Flask(__name__)
+@app.route('/')
+def home():
+    return render_template('index.html')
 
+@app.route('/predict', methods=['POST'])
+def predict():
+    if request.method == 'POST':
+        preg = int(request.form['pregnancies'])
+        glucose = int(request.form['glucose'])
+        bp = int(request.form['bloodpressure'])
+        st = int(request.form['skinthickness'])
+        insulin = int(request.form['insulin'])
+        bmi = float(request.form['bmi'])
+        dpf = float(request.form['dpf'])
+        age = int(request.form['age'])
 
-Pregnancies = st.slider("Input Your Number of Pregnancies", 0, 16)
-Glucose = st.slider("Input your Gluclose", 74, 200)
-BloodPressure = st.slider("Input your Blood Pressure", 30, 130)
-SkinThickness = st.slider("Input your Skin thickness", 0, 100)
-Insulin = st.slider("Input your Insulin", 0, 200)
-BMI = st.slider("Input your BMI", 14.0, 60.0)
-DiabetesPedigreeFunction = st.slider(
-    "Input your Diabetes Pedigree Function", 0.0, 6.0)
-Age = st.slider("Input your Age", 0, 100)
+        data= np.array([[preg, glucose, bp, st, insulin, bmi, dpf, age]])
 
-
-inputs = [[Pregnancies, Glucose, BloodPressure, SkinThickness,
-           Insulin, BMI, DiabetesPedigreeFunction, Age]]
-sad_image = Image.open('sad.jpeg')
-happy_image= Image.open('happy.jpeg')
+        my_prediction= classifer.predict(data)
 
 
-if st.button('Predict'):
-    result = model.predict(inputs)
-    updated_res = result.flatten().astype(int)
-    if updated_res == 0:
-        st.write("Sorry, You might have Diabetes. Take of Yourself")
-        st.image(image=sad_image)
-    else:
-        st.write("You are Safe. But take care of your Health")
-        st.image(image=happy_image)
-
-st.title("Used Data-Set")
-data = pd.read_csv("file.csv")
-# st.write(data)
+        return render_template('result.html',prediction=my_prediction)
 
 
-# Displaying the dataframe
-gb = GridOptionsBuilder.from_dataframe(data)
-gb.configure_pagination(paginationAutoPageSize=True)  # Add pagination
-gb.configure_side_bar()  # Add a sidebar
-gb.configure_selection('multiple', use_checkbox=True,
-                       groupSelectsChildren="Group checkbox select children")  # Enable multi-row selection
-gridOptions = gb.build()
-
-grid_response = AgGrid(
-    data,
-    gridOptions=gridOptions,
-    data_return_mode='AS_INPUT',
-    update_mode='MODEL_CHANGED',
-    fit_columns_on_grid_load=False,
-    theme='blue',  # Add theme color to the table
-    enable_enterprise_modules=True,
-    height=350,
-    width='100%',
-    reload_data=True
-)
-data = grid_response['data']
-selected = grid_response['selected_rows']
-df = pd.DataFrame(selected)  # Pass the selected rows to a new dataframe df
-
-if __name__ =='__main__':
-    main()
+if __name__=='__main__':
+    app.run(debug=True)
