@@ -31,5 +31,5 @@ def predict():
         return render_template('result.html',prediction=my_prediction)
 
 
-if __name__=='__main__':
+if __name__=='__main__': # THIS IS FOR LOADING 
     app.run(debug=True)
