@@ -14,7 +14,6 @@ def home():
 
 
 @app.route('/predict',methods=['POST'])
-
 def predict():
     if request.method=='POST':
         age = int(request.form['age'])
