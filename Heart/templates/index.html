@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="login">
+        <form action="{{url_for('predict')}}" method="post">
+            <input class="form-input" type="text" name="age" placeholder="Enter Your Age" >
+            <br>
+            <input class="form-input" type="text" name="sex" placeholder="1 for Male ; 0 for Female">
+            <br>
+            <input class="form-input" type="text" name="cp" placeholder="Read the list below to fill this" >
+            <br>
+            <input class="form-input" type="text" name="trtbps" placeholder="Read the list below to fill this" >
+            <br>
+            <input class="form-input" type="text" name="chol" placeholder="Read the list below to fill this" >
+            <br>
+            <input class="form-input" type="text" name="fbs" placeholder="Read the list below to fill this" >
+            <br>
+            <input class="form-input" type="text" name="restecg" placeholder="Read the list below to fill this" >
+            <br>
+            <input class="form-input" type="text" name="thalachh" placeholder="Read the list below to fill this" >
+            <br>
+            <input class="form-input" type="text" name="exng" placeholder="Read the list below to fill this" >
+            <br>
+            <input class="form-input" type="text" name="oldpeak" placeholder="Read the list below to fill this" >
+            <br>
+            <input class="form-input" type="text" name="slp" placeholder="Read the list below to fill this" >
+            <br>
+            <input class="form-input" type="text" name="caa" placeholder="Read the list below to fill this" >
+            <br>
+            <input class="form-input" type="text" name="thall" placeholder="Read the list below to fill this" >
+            <br>
+        <button type="submit" class="btn btn-primary btn-block btn-large">Predict</button>
+            
+
+    
+        </form>
+
+        <br>
+
+        {{prediction_text}}
+    </div>
+    
+</body>
+</html>
